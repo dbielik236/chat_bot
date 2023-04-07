@@ -9,10 +9,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 import warnings
 warnings.filterwarnings('ignore')
 
+import nltk
+from nltk.stem import WordNetLemmatizer
 nltk.download('popular', quiet=True) # for downloading packages
 
 # open and convert all text to lowercase for pre-processing
-file = open('chat_bot.text', 'r', encoding ='utf8', errors = 'ignore')
+file = open('chat_bot.txt', 'r', encoding ='utf8', errors = 'ignore')
 raw = file.read()
 raw = raw.lower()
 
@@ -39,9 +41,9 @@ def LemNormalize(text):
 
 # Keyword matching
 
-GREETING_INPUTS = ("hello", "hi", "greetings", "sup", "what's up", "hey")
+GREETING_INPUTS = ("hello", "hi", "greetings", "what's up", "hey")
 
-GREETING_RESPONSES = ["hi", "hey", "*nods*", "hi there", "hello", "I am glad! You are talking to me"]
+GREETING_RESPONSES = ["Hi", "Hey", "*nods*", "Hi there", "Hello"]
 
 # if user's input is greeting, returns greeting
 def greeting(sentence):
@@ -62,32 +64,34 @@ def response(user_response):
     flat.sort()
     req_tfidf = flat[-2]
     if (req_tfidf==0):
-        chat_bot_response = chat_bot_response + "I am sorry! I don't understand you."
+        chat_bot_response = chat_bot_response + "Sorry, I don't know that."
         return chat_bot_response
     else:
         chat_bot_response = chat_bot_response + sent_tokens[idx]
         return chat_bot_response
 
+name = "BeatleBot"
+subject = "The Beatles"
+
 # starting and ending phrases
 flag=True
-print("Chatbot: My name is Chattie. I will answer all your questions about Chatbots. If you want to exit, type Bye!")
+print(name + ": Hi, I'm " + name + ". I will answer all your questions about " + subject + ". If you want to exit, type bye!")
 
 while(flag==True):
-    user_response = input()
+    user_response = input("Me: ")
     user_response = user_response.lower()
     if(user_response!='bye'):
         if(user_response=='thanks' or user_response=='thank you'):
             flag=False
-            print("Chatbot: You are welcome.")
+            print(name + ": You are welcome! Have a great day!")
         else:
             if(greeting(user_response)!=None):
-                print("Chatbot: " + greeting(user_response))
+                print(name + ": " + greeting(user_response))
             else:
-                print("Chatbot: ", end="")
+                print(name + ": ", end="")
                 print(response(user_response))
                 sent_tokens.remove(user_response)
     else:
         flag=False
-        print("Chatbot: Bye! Take care!")
-
+        print(name + ": Bye! Have a great day!")
 
